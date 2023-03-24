@@ -6,19 +6,7 @@
 function g {
     # Remember to skip the first argument
     # _zg_echo "command git ${@:1}"
-    git_ssh_config_file=".git_ssh.conf"
-    git_ssh_clear_config_file=".git_ssh_clear.conf"
-    repository_root=$(command git rev-parse --show-toplevel)
-    
-    if [[ -e $repository_root/$git_ssh_config_file ]]; then
-        source $repository_root/$git_ssh_config_file
-    fi
-    
     command git ${@:1}
-
-    if [[ -e $repository_root/$git_ssh_clear_config_file ]]; then
-        source $repository_root/$git_ssh_clear_config_file
-    fi
 }
 
 # _zg_doc "git:: gst: git status"
@@ -110,21 +98,35 @@ function gpull() {
 
 # _zg_doc "git:: gpush: push local copy to remote"
 function gpush() {
+    # Generalize to allow passing of flags e.g. '-f'
+    git_ssh_config_file=".git_ssh.conf"
+    git_ssh_clear_config_file=".git_ssh_clear.conf"
+    repository_root=$(command git rev-parse --show-toplevel)
+    
+    if [[ -e $repository_root/$git_ssh_config_file ]]; then
+        source $repository_root/$git_ssh_config_file
+    fi
+    
     if [ -z $1 ]; then
         g push origin main
     else
         g push ${@:1}
-    fi 
+    fi
+    
+    if [[ -e $repository_root/$git_ssh_clear_config_file ]]; then
+        source $repository_root/$git_ssh_clear_config_file
+    fi
+ 
 }
 
-# _zg_doc "git:: gpushf: force push local copy to remote"
-function gpushf() {
-    if [ -z $1 ]; then
-        g push -f origin main
-    else
-        g push -f  ${@:1}
-    fi 
-}
+# # _zg_doc "git:: gpushf: force push local copy to remote"
+# function gpushf() {
+#     if [ -z $1 ]; then
+#         g push -f origin main
+#     else
+#         g push -f  ${@:1}
+#     fi 
+# }
 
 # _zg_doc "git:: gsq: squeeze designated commits into one"
 function gsq() {
