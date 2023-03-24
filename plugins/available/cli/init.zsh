@@ -82,6 +82,22 @@ function help() {
     _zg_docs
 }
 
+# _zg_doc "history:: h: history"
+function h() {
+    if [[ -z "$1" ]]; then
+        total_lines=100
+    else
+        total_lines=$1
+    fi
+    fc -l  -${total_lines}
+}
 
-
+# _zg_doc "history:: hf: find in history"
+function hf() {
+    total_lines=1000
+    output_lines=100
+    if [[ -n "$1" ]]; then
+        h $total_lines | egrep -i $1 | tail -n $output_lines
+    fi
+}
 

@@ -5,8 +5,20 @@
 # _zg_doc "git:: g: Issue any git command"
 function g {
     # Remember to skip the first argument
-    _zg_echo "command git ${@:1}"
+    # _zg_echo "command git ${@:1}"
+    git_ssh_config_file=".git_ssh.conf"
+    git_ssh_clear_config_file=".git_ssh_clear.conf"
+    repository_root=$(command git rev-parse --show-toplevel)
+    
+    if [[ -e $repository_root/$git_ssh_config_file ]]; then
+        source $repository_root/$git_ssh_config_file
+    fi
+    
     command git ${@:1}
+
+    if [[ -e $repository_root/$git_ssh_clear_config_file ]]; then
+        source $repository_root/$git_ssh_clear_config_file
+    fi
 }
 
 # _zg_doc "git:: gst: git status"
@@ -67,7 +79,6 @@ function glo() {
 
 # _zg_doc "git:: gconf: git display 'nearest' .git/config file
 function gconf() {
-
     cat "$(g rev-parse --git-dir)/config"
     # local git_config_name='.git/config'
     # local current_dir=$(pwd)
