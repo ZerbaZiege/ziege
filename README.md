@@ -11,7 +11,18 @@ export ZIEGE_HOME="$HOME/.ziege"
 mkdir -p $ZIEGE_HOME
 cd $ZIEGE_HOME
 #TODO Clone Git repo into $ZIEGE_HOME
-$ZIEGE_HOME/ziege_install.zsh
+#TODO $ZIEGE_HOME/ziege_install.zsh
+```
+
+```
+Temporary
+
+In ~/.zshrc
+
+# Ziege manual installation
+if [[ -d $HOME/.ziege ]] && [[ -e $HOME/.ziege/init.zsh ]]; then
+    source $HOME/.ziege/init.zsh
+fi
 
 ```
 ## Plugins
