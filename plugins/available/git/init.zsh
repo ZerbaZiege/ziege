@@ -188,7 +188,7 @@ function gbcl() {
 
 # _zg_doc "git:: gpr: New Github pull request"
 function gpr() {
-    set -x
+    #set -x
     if [[ -z "$1" ]]; then
         echo "Usage: gpr BRANCH_NAME COMMIT_MESSAGE"
     else
@@ -212,6 +212,6 @@ function gpr() {
             xdg-open $(cat $HOME/tmp/gpr.out) |& >/dev/null
         fi
     fi
-    set +x     
+    # set +x     
 }
 
