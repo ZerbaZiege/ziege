@@ -22,13 +22,13 @@ function gaa {
 # _zg_doc "git:: gcm: git commit with commit message on command line"
 function gcm() {
   gaa
-  g commit -v -m "\"${@:1}\""    
+  g commit -v -m "${@:1}"    
 }
 
 # _zg_doc "git:: gcma: git commit amend with commit message on command line
 function gcma() {
   gaa
-  g commit --amend -v -m "\"${@:1}\""     
+  g commit --amend -v -m "${@:1}"     
 }
 
 # _zg_doc "git:: gb: git list branches
@@ -205,7 +205,9 @@ function gpr() {
             gpush origin $(gbc)
             # full_message=$(url_encode "${branch_name}: ${commit_message}")
             # xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${branch_name}" |& >/dev/null
-            gh pr create --title "${branch_name}: ${commit_message}" --body "Completed"
+            gh pr create --title "${branch_name}: ${commit_message}" --body "Completed" | tee $HOME/tmp/gpr.out
+            pr_page_url=$(cat $HOME/tmp/gpr.out | grep github.com) |& >/dev/null
+            xdg-open $pr_page_url 
         fi
     fi
     set +x     
