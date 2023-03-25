@@ -101,3 +101,10 @@ function hf() {
     fi
 }
 
+# _zg_doc "url:: url_encode: url encode a string"
+function url_encode() {
+    if [[ -n "$1" ]]; then
+        python3 -c "from urllib.parse import quote; print(quote(\"${1-''}\"))"
+    fi
+}
+
