@@ -206,8 +206,8 @@ function gpr() {
             # full_message=$(url_encode "${branch_name}: ${commit_message}")
             # xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${branch_name}" |& >/dev/null
             gh pr create --title "${branch_name}: ${commit_message}" --body "Completed" | tee $HOME/tmp/gpr.out
-            pr_page_url=$(cat $HOME/tmp/gpr.out | grep github.com) |& >/dev/null
-            xdg-open $pr_page_url 
+            pr_page_url=$(cat $HOME/tmp/gpr.out | grep github.com) 
+            xdg-open $pr_page_url |& >/dev/null
         fi
     fi
     set +x     
