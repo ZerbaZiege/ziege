@@ -186,7 +186,7 @@ function gbcl() {
     fi
 }
 
-# _zg_doc "git:: gpr: New Github pull request"
+# _zg_doc "git:: gpr: Create new Github pull request"
 function gpr() {
     #set -x
     if [[ -z "$1" ]]; then
@@ -202,14 +202,17 @@ function gpr() {
             if [[ $? -ne 0 ]]; then
                 gcm "${branch_name}: ${commit_message}"
             fi
-
             gpush origin $(gbc)
-            # full_message=$(url_encode "${branch_name}: ${commit_message}")
-            # xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${branch_name}" |& >/dev/null
-            gh pr create --title "${branch_name}: ${commit_message}" --body "Completed" | tee $HOME/tmp/gpr.out
-            pr_page_url=$(cat $HOME/tmp/gpr.out | grep github.com) 
-            #xdg-open $pr_page_url |& >/dev/null
-            xdg-open $(cat $HOME/tmp/gpr.out) |& >/dev/null
+            gh_bin=$(which gh)
+            if [[ -z "$gh_bin" ]]; then
+                echo "You will need to complete the pull request manually for $(gbc)"
+                echo "Github CLI tools required for automated PR creation"
+                echo "Install from https://github.com/cli/cli"
+            else
+                gh_tmp_out="$HOME/tmp/gpr.out"
+                gh pr create --title "${branch_name}: ${commit_message}" --body "Completed" | tee $gh_tmp_out
+                xdg-open $(cat $gh_tmp_out) |& >/dev/null
+            fi
         fi
     fi
     # set +x     
