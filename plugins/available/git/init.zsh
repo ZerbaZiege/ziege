@@ -188,6 +188,7 @@ function gbcl() {
 
 # _zg_doc "git:: gpr: New Github pull request"
 function gpr() {
+    set -x
     if [[ -z "$1" ]]; then
         echo "Usage: gpr BRANCH_NAME COMMIT_MESSAGE"
     else
@@ -208,7 +209,7 @@ function gpr() {
             gh pr create --title "${branch_name}: ${commit_message}" --body "Completed" | tee $HOME/tmp/gpr.out
             pr_page_url=$(cat $HOME/tmp/gpr.out | grep github.com) 
             #xdg-open $pr_page_url |& >/dev/null
-            xdg-open $(cat ~/tmp/gpr.out) |& >/dev/null
+            xdg-open $(cat $HOME/tmp/gpr.out) |& >/dev/null
         fi
     fi
     set +x     
