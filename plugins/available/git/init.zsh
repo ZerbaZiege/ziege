@@ -33,7 +33,7 @@ function gcma() {
 
 # _zg_doc "git:: gb: git list branches
 function gb() {
-    g branch 
+    g branch ${@:1}
 }
 
 # _zg_doc "git:: gcwip: git commit with 'WIP' message
