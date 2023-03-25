@@ -117,18 +117,18 @@ function gpull() {
 # _zg_doc "git:: gpush: push local copy to remote"
 function gpush() {
     if [ -z $1 ]; then
-        _g_ssh push origin main
+        _g_ssh push origin main --tags
     else
-        _g_ssh push ${@:1}
+        _g_ssh push ${@:1} --tags
     fi
 }
 
 # _zg_doc "git:: gpushf: force push local copy to remote"
 function gpushf() {
     if [ -z $1 ]; then
-        _g_ssh push -f origin main
+        _g_ssh push -f origin main --tags
     else
-        _g_ssh push -f  ${@:1}
+        _g_ssh push -f  ${@:1} --tags
     fi 
 }
 
@@ -139,3 +139,32 @@ function gsq() {
     fi 
 }
 
+# _zg_doc "git:: gco: checkout a branch"
+function gco() {
+    if [[ -n "$1" ]]; then
+        g checkout $1
+    fi
+}
+
+# _zg_doc "git:: gcom: checkout primary (usually main) branch"
+function gcom() {
+    primary_branch=$(gprimary)
+    gco $primary_branch
+}
+
+# _zg_doc "git:: gprimary: determine primary (usually main) branch"
+function gprimary() {
+    # Temporary hack
+    g remote show origin | sed -n '/HEAD branch/s/.*: //p'
+}
+
+# _zg_doc "git:: gbco: create and checkout a new up-to-date branch"
+function gbco() {
+    if [[ -n "$1" ]]; then
+        branch_name=$1
+        gcom
+        gpull
+        gb $branch_name
+        gco $branch_name
+    fi
+}
