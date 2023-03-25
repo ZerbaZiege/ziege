@@ -185,3 +185,28 @@ function gbcl() {
         gb -D $branch_to_close
     fi
 }
+
+# _zg_doc "git:: gpr: New Github pull request"
+function gpr() {
+    set -x
+    if [[ -z "$1" ]]; then
+        echo "Usage: gpr BRANCH_NAME COMMIT_MESSAGE"
+    else
+        branch_name="$1"
+        shift
+        if [[ -z "$1" ]]; then
+            echo "Usage: missing commit message"
+        else
+            commit_message="$1"
+            gst | grep -q 'working tree clean'
+            if [[ $? -ne 0 ]]; then
+                gcm "${branch_name}: ${commit_message}"
+                gpush origin $(gbc)
+                full_message=$(url_encode "${branch_name}: ${commit_message}")
+                xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${full_message}" |& >/dev/null
+            fi
+        fi
+    fi
+    set +x     
+}
+
