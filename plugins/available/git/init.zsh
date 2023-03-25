@@ -22,13 +22,13 @@ function gaa {
 # _zg_doc "git:: gcm: git commit with commit message on command line"
 function gcm() {
   gaa
-  g commit -v -m "\"${@:1}\""    
+  g commit -v -m "${@:1}"    
 }
 
 # _zg_doc "git:: gcma: git commit amend with commit message on command line
 function gcma() {
   gaa
-  g commit --amend -v -m "\"${@:1}\""     
+  g commit --amend -v -m "${@:1}"     
 }
 
 # _zg_doc "git:: gb: git list branches
