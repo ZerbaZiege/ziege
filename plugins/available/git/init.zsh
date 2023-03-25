@@ -201,10 +201,11 @@ function gpr() {
             gst | grep -q 'working tree clean'
             if [[ $? -ne 0 ]]; then
                 gcm "${branch_name}: ${commit_message}"
-                gpush origin $(gbc)
-                full_message=$(url_encode "${branch_name}: ${commit_message}")
-                xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${full_message}" |& >/dev/null
             fi
+
+            gpush origin $(gbc)
+            full_message=$(url_encode "${branch_name}: ${commit_message}")
+            xdg-open "https://github.com/ZerbaZiege/ziege/pull/new/${branch_name}" |& >/dev/null
         fi
     fi
     set +x     
