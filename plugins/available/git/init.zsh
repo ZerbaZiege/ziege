@@ -161,10 +161,27 @@ function gprimary() {
 # _zg_doc "git:: gbco: create and checkout a new up-to-date branch"
 function gbco() {
     if [[ -n "$1" ]]; then
-        branch_name=$1
+        branch_name="$1"
         gcom
         gpull
-        gb $branch_name
-        gco $branch_name
+        gb "$branch_name"
+        gco "$branch_name"
+    fi
+}
+
+# _zg_doc "git:: gbc: get current branch"
+function gbc() {
+    g branch | grep '^*' | cut -d' ' -f2
+}
+
+# _zg_doc "git:: gbc: close current branch"
+function gbcl() {
+    branch_to_close=$(gbc)
+    primary_branch=$(gprimary)
+
+    if [[ "$branch_to_close" !=  "$primary_branch" ]]; then
+        gcom
+        gpull
+        gb -D $branch_to_close
     fi
 }
