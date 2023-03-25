@@ -117,18 +117,18 @@ function gpull() {
 # _zg_doc "git:: gpush: push local copy to remote"
 function gpush() {
     if [ -z $1 ]; then
-        _g_ssh push origin main
+        _g_ssh push origin main --tags
     else
-        _g_ssh push ${@:1}
+        _g_ssh push ${@:1} --tags
     fi
 }
 
 # _zg_doc "git:: gpushf: force push local copy to remote"
 function gpushf() {
     if [ -z $1 ]; then
-        _g_ssh push -f origin main
+        _g_ssh push -f origin main --tags
     else
-        _g_ssh push -f  ${@:1}
+        _g_ssh push -f  ${@:1} --tags
     fi 
 }
 
