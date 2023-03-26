@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+
+# Ziege Load third-party plugins
+
+# _zg_doc "third_party:: _tp_autoload_plugins: Autoload third-party plugins installed in ~/.zsh"
+function  _tp_autoload_plugins() {
+    export ZSH_THIRD_PARTY_PLUGINS_DIR=${ZIEGE_THIRD_PARTY_PLUGINS_DIR:-$HOME/.zsh}
+
+    typeset -A tp_plugins
+    tp_plugins[zsh-autosuggestions]="zsh-autosuggestions.zsh"
+
+    for tp_plugin_name in "${(@k)tp_plugins}"; do
+        tp_plugin_dir=${ZSH_THIRD_PARTY_PLUGINS_DIR}/${tp_plugin_name}
+        tp_plugin_init_file=$tp_plugins[${tp_plugin_name}]
+        source ${tp_plugin_dir}/${tp_plugin_init_file}
+    done
+}
+
+_tp_autoload_plugins
