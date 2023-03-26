@@ -12,7 +12,10 @@ function  _tp_autoload_plugins() {
     for tp_plugin_name in "${(@k)tp_plugins}"; do
         tp_plugin_dir=${ZSH_THIRD_PARTY_PLUGINS_DIR}/${tp_plugin_name}
         tp_plugin_init_file=$tp_plugins[${tp_plugin_name}]
-        source ${tp_plugin_dir}/${tp_plugin_init_file}
+        tp_plugin_init_path=${tp_plugin_dir}/${tp_plugin_init_file}
+        if [[ -e $tp_plugin_init_path ]]; then
+            source $tp_plugin_init_path
+        fi
     done
 }
 
