@@ -4,79 +4,84 @@
 
 export ZIEGE_DEBUG=OFF
 export ZIEGE_ECHO=OFF
-export ZIEGE_GIT_DEBUG=ON
+export ZIEGE_GIT_DEBUG=OFF
 
-# _zg_doc "ziege:: _zg_silence: ignore stdout and stderr"
+# _zg_doc "ziege:: _zg_silence: Silence a command. Ignore stdout and stderr."
 function _zg_silence() {
     "${@:1}" &> /dev/null
     return $?
 }
 
+# _zg_doc "ziege:: _zg_debug: Write a debug message. Controlled by ZIEGE_DEBUG."
 function _zg_debug {
     if [[ -n $ZIEGE_DEBUG && $ZIEGE_DEBUG == 'ON' ]]; then
         echo "_zg_debug ${@:1}"
     fi
 }
 
-# _zg_doc "ziege:: _zg_debug: internal debug message"
+# _zg_doc "ziege:: _zg_debug: Display internal debug message."
 function _zg_debug {
     if [[ -n $ZIEGE_DEBUG && $ZIEGE_DEBUG == 'ON' ]]; then
         echo "_zg_debug ${@:1}"
     fi
 }
 
-# _zg_doc "ziege:: _zg_echo: diplay message or command"
+# _zg_doc "ziege:: _zg_echo: Diplay internal message or command. Controlled by ZIEGE_ECHO."
 function _zg_echo {
     if [[ -n $ZIEGE_ECHO && $ZIEGE_ECHO == 'ON' ]]; then
         echo "${@:1}"
     fi    
 }
 
-# _zg_doc "ziege:: _zg_git_debug: internal git debug message"
+# _zg_doc "ziege:: _zg_git_debug: Display internal git debug message. Controlled by ZIEGE_GIT_DEBUG."
 function _zg_git_debug {
     if [[ -n $ZIEGE_GIT_DEBUG && $ZIEGE_GIT_DEBUG == 'ON' ]]; then
         echo "_zg_git_debug ${@:1}"
     fi
 }
 
-# _zg_doc "ziege:: _zg_env: set env vars"
+# _zg_doc "ziege:: _zg_env: Set or list environment variables for the Ziege framework."
 function _zg_env {
-    export ZIEGE_HOME="${ZIEGE_HOME:-$HOME/.ziege}"
-    export ZIEGE_PLUGINS_DIR="${ZIEGE_HOME}/plugins" # From the repo
-    export ZIEGE_PLUGINS_AVAILABLE_DIR="${ZIEGE_PLUGINS_DIR}/available" # From the repo
-    export ZIEGE_PLUGINS_ENABLED_DIR="${ZIEGE_PLUGINS_DIR}/enabled"
-    mkdir -p $ZIEGE_PLUGINS_ENABLED_DIR
-    export ZIEGE_CACHES="${ZIEGE_HOME}/caches"
-    mkdir -p $ZIEGE_CACHES
-    export ZIEGE_DOCS_CACHE="${ZIEGE_CACHES}/docs"
-    mkdir -p $ZIEGE_DOCS_CACHE
+    if [[ -z "$1" ]]; then
+        env | grep ZIEGE_
+    elif [[ "$1" == "--set" ]]; then
+        export ZIEGE_HOME="${ZIEGE_HOME:-$HOME/.ziege}"
+        export ZIEGE_PLUGINS_DIR="${ZIEGE_HOME}/plugins" # From the repo
+        export ZIEGE_PLUGINS_AVAILABLE_DIR="${ZIEGE_PLUGINS_DIR}/available" # From the repo
+        export ZIEGE_PLUGINS_ENABLED_DIR="${ZIEGE_PLUGINS_DIR}/enabled"
+        mkdir -p $ZIEGE_PLUGINS_ENABLED_DIR
+        export ZIEGE_CACHES="${ZIEGE_HOME}/caches"
+        mkdir -p $ZIEGE_CACHES
+        export ZIEGE_DOCS_CACHE="${ZIEGE_CACHES}/docs"
+        mkdir -p $ZIEGE_DOCS_CACHE
+    else
+        echo "_zg_env unrecognized option $1"
+    fi
 }
 
-# _zg_doc "ziege:: _zg_home: display Ziege home directory"
+# _zg_doc "ziege:: _zg_home: Display Ziege home directory."
 function _zg_home {
     echo "$ZIEGE_HOME"
 }
 
-# _zg_doc "ziege:: _zgg: go to Ziege home directory"
+# _zg_doc "ziege:: _zgg: Go to Ziege home directory."
 function _zgg {
     cd $ZIEGE_HOME
 }
 
-# _zg_doc "ziege:: _zg_reload: reload the Ziege framework"
+# _zg_doc "ziege:: _zg_reload: Reload the Ziege framework."
 function _zg_reload {
     source $ZIEGE_HOME/init.zsh
 }
 
-
-
-# _zg_doc "ziege:: _zg_bootstrap: bootstrap the Ziege framework"
+# _zg_doc "ziege:: _zg_bootstrap: Bootstrap the Ziege framework."
 function _zg_bootstrap {
 
     local _date_stamp
     local _zg_plugin_init_file
 
     # Make sure environment is set up correctly
-    _zg_env
+    _zg_env --set
     
     _date_stamp=$(date "+%Y%m%d-%H%M%S")
     _zg_debug "_zg_bootstrap $_date_stamp" 
@@ -92,7 +97,7 @@ function _zg_bootstrap {
     fi
 }
 
-# _zg_doc "ziege:: _zg_default_loader: default loader if the entire Ziege framework"
+# _zg_doc "ziege:: _zg_default_loader: Default loader for the entire Ziege framework."
 function _zg_default_loader {
     # If the full Ziege plugin isn't available
     # Just load everything that's available
@@ -133,7 +138,7 @@ function _zg_default_loader {
     
 }
 
-# _zg_doc "ziege:: _zg_docs: generate, cache and display the docs"
+# _zg_doc "ziege:: _zg_docs: Generate, cache and display the documentation"
 function _zg_docs() {
     local cache_period_seconds=60
     local docs_cache_date_file="$ZIEGE_DOCS_CACHE/cache_date"
@@ -173,9 +178,15 @@ function _zg_docs() {
     done
 
     popd >/dev/null   
-
  
 }
+
+# _zg_doc "ziege:: _zg_docs_clear_cache: Clear the documentation cache."
+function _zg_docs_clear_cache() {
+    rm -rf $ZIEGE_DOCS_CACHE
+    mkdir -p $ZIEGE_DOCS_CACHE
+}
+
 
 # Start everything off
 _zg_bootstrap
