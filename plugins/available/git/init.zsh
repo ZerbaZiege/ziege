@@ -36,7 +36,7 @@ function gb() {
     g branch ${@:1}
 }
 
-# _zg_doc "git:: gcwip: git commit with 'WIP' message
+# _zg_doc "git:: gcwip: git commit all with 'WIP' message
 function gcwip() {
     gaa
     if [ -z $1 ]; then
@@ -46,7 +46,7 @@ function gcwip() {
     fi
 }
 
-# _zg_doc "git:: gwip: git commit with 'WIP' message
+# _zg_doc "git:: gwip: git commit all with 'WIP' message
 function gwip() {
     if [ -z $1 ]; then
         gcwip
@@ -184,6 +184,11 @@ function gbcl() {
         gpull
         gb -D $branch_to_close
     fi
+}
+
+# _zg_doc "git:: gcl: git clone the specified repository"
+function gcl() {
+    g clone ${@:1}
 }
 
 # _zg_doc "git:: gpr: Create new Github pull request"
