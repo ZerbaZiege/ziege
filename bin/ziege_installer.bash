@@ -3,6 +3,9 @@
 # With thanks to the pyenv installer project
 
 set -e
+
+export ZIEGE_DEBUG="ON"
+
 [ -n "$ZIEGE_DEBUG" ] && set -x
 
 if [ -z "$ZIEGE_INSTALL_DIRECTORY" ]; then
