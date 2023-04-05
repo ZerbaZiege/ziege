@@ -2,7 +2,7 @@
 
 # Ziege VSCode plugin
 
-# _zg_doc "vscode:: v: Run VSCcode on the current directory"
+# _zg_doc "vscode:: v: Run VSCode on the current directory"
 function v() {
     if [[ -z "$1" ]]; then
         command code .

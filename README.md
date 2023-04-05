@@ -43,7 +43,15 @@ Plugins are loaded via 'source init.zsh' in the plugin top-level directory.
 
 This process is automatic when ziege is initially loaded.
 
-If you need to initiliaze your plugin
-  * Define a function named '\_init\_PLUGIN_NAME'
-  * Invoke as the last line of init.zsh
   
+## Overrides
+
+To override any function in the Ziege framework, create a file
+
+```$ZIEGE_HOME/.zg_overrides.zsh```
+
+If present, this file will be sourced as the very last step in the Ziege bootstrap process.
+
+Of course, you can just find the function in the plugin source and modify it. However, the function will be overwritten by the next update. 
+
+

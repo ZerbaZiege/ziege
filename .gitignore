@@ -1,3 +1,4 @@
 enabled
 caches
 plugins/enabled
+.zg_overrides.zsh

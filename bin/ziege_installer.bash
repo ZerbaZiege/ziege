@@ -25,7 +25,7 @@ colorize() {
 if [ -d "${ZIEGE_INSTALL_DIRECTORY}" ]; then
   { echo
     colorize 1 "WARNING"
-    echo ": Can not proceed with installation. Kindly remove the '${ZIEGE_INSTALL_DIRECTORY}' directory first."
+    echo "Cannot proceed with installation. Kindly remove the '${ZIEGE_INSTALL_DIRECTORY}' directory first."
     echo
   } >&2
     exit 1
