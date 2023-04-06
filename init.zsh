@@ -95,6 +95,10 @@ function _zg_bootstrap {
         _zg_debug "ZG full plugin not yet implemented"
         _zg_default_loader
     fi
+
+    if [[ -e $ZIEGE_HOME/.zg_overrides.zsh ]]; then
+        source $ZIEGE_HOME/.zg_overrides.zsh
+    fi
 }
 
 # _zg_doc "ziege:: _zg_default_loader: Default loader for the entire Ziege framework."
@@ -187,6 +191,19 @@ function _zg_docs_clear_cache() {
     mkdir -p $ZIEGE_DOCS_CACHE
 }
 
+# _zg_doc "ziege:: _zg_run: (Try) to run a command. Return command presence and status in array _ZG_REPLY"
+function _zg_run() {
+    cmd="$1"
+    which $cmd &> /dev/null
+    which_status="$?"
+    cmd_status="0"
+    if [[ $which_status == "0" ]]; then
+        ${@}
+        cmd_status="$?"
+    fi
+
+    _ZG_REPLY=($which_status $cmd_status)
+}
 
 # Start everything off
 _zg_bootstrap

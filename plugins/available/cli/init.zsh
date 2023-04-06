@@ -22,6 +22,7 @@ function lla() {
 
 # _zg_doc "ls:: lth: ls -1t - most recent n entries"
 function lth() {
+    local total_lines
     if [[ -z "$1" ]]; then
         total_lines="10"
     else
@@ -84,6 +85,7 @@ function help() {
 
 # _zg_doc "history:: h: history"
 function h() {
+    local total_lines
     if [[ -z "$1" ]]; then
         total_lines=100
     else
@@ -94,8 +96,8 @@ function h() {
 
 # _zg_doc "history:: hf: find in history"
 function hf() {
-    total_lines=1000
-    output_lines=100
+    local total_lines=1000
+    local output_lines=100
     if [[ -n "$1" ]]; then
         h $total_lines | egrep -i $1 | tail -n $output_lines
     fi

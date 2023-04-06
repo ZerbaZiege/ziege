@@ -89,20 +89,12 @@ function gs() {
 
 # _zg_doc "git:: _g_ssh: (internal) wrapper for any Git command that requires SSH
 function _g_ssh() {
-    git_ssh_config_file=".git_ssh.conf"
-    git_ssh_clear_config_file=".git_ssh_clear.conf"
-    repository_root=$(command git rev-parse --show-toplevel)
-    
-    if [[ -e $repository_root/$git_ssh_config_file ]]; then
-        source $repository_root/$git_ssh_config_file
-    fi
+    _zg_run _git_ssh_set
     
     # Remember to skip the first argument
     g ${@:1}
-    
-    if [[ -e $repository_root/$git_ssh_clear_config_file ]]; then
-        source $repository_root/$git_ssh_clear_config_file
-    fi
+
+    _zg_run _git_ssh_clear    
 }
 
 # _zg_doc "git:: gpull: update local copy from remote"
@@ -148,6 +140,7 @@ function gco() {
 
 # _zg_doc "git:: gcom: checkout primary (usually main) branch"
 function gcom() {
+    local primary_branch
     primary_branch=$(gprimary)
     gco $primary_branch
 }
@@ -160,6 +153,7 @@ function gprimary() {
 
 # _zg_doc "git:: gbco: create and checkout a new up-to-date branch"
 function gbco() {
+    loca branch_name
     if [[ -n "$1" ]]; then
         branch_name="$1"
         gcom
@@ -176,6 +170,9 @@ function gbc() {
 
 # _zg_doc "git:: gbc: close current branch"
 function gbcl() {
+    local branch_to_close
+    local primary_branch
+
     branch_to_close=$(gbc)
     primary_branch=$(gprimary)
 
@@ -193,6 +190,11 @@ function gcl() {
 
 # _zg_doc "git:: gpr: Create new Github pull request"
 function gpr() {
+    local branch_name
+    local commit_message
+    local gh_bin
+    local gh_tmp_out
+
     #set -x
     if [[ -z "$1" ]]; then
         echo "Usage: gpr BRANCH_NAME COMMIT_MESSAGE"
