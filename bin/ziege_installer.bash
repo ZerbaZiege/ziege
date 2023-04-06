@@ -12,9 +12,6 @@ if [ -z "$ZIEGE_INSTALL_DIRECTORY" ]; then
   export ZIEGE_INSTALL_DIRECTORY="${HOME}/.ziege"
 fi
 
-# TODO For testing
-export ZIEGE_INSTALL_DIRECTORY="$HOME/tmp/ziege_install_test"
-
 colorize() {
   if [ -t 1 ]; then printf "\e[%sm%s\e[m" "$1" "$2"
   else echo -n "$2"
