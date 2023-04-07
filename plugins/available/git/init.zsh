@@ -153,7 +153,7 @@ function gprimary() {
 
 # _zg_doc "git:: gbco: create and checkout a new up-to-date branch"
 function gbco() {
-    loca branch_name
+    local branch_name
     if [[ -n "$1" ]]; then
         branch_name="$1"
         gcom
