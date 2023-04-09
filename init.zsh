@@ -144,7 +144,7 @@ function _zg_default_loader {
 
 # _zg_doc "ziege:: _zg_docs: Generate, cache and display the documentation"
 function _zg_docs() {
-    local cache_period_seconds=60
+    local cache_period_seconds=${ZIEGE_DOCS_CACHE_TTL_SECONDS:-86400}
     local docs_cache_date_file="$ZIEGE_DOCS_CACHE/cache_date"
     local docs_cache_file="$ZIEGE_DOCS_CACHE/cache_info"
     local docs_cache_file_formatted="$ZIEGE_DOCS_CACHE/cache_info_formatted"

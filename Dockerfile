@@ -14,7 +14,8 @@ RUN apt-get install -y --no-install-recommends \
     git \
     less \
     jq \
-    curl 
+    curl \
+    iputils-ping 
 
 RUN chsh -s /usr/bin/zsh
 
