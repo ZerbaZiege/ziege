@@ -111,7 +111,7 @@ function url_encode() {
     fi
 }
 
-# _zg_doc "path:: p: url print the current path"
+# _zg_doc "path:: p: print the current path"
 function p() {
     echo "$PATH"
 }
