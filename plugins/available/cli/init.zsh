@@ -61,9 +61,6 @@ function goext() {
     cd $HOME/Projects/external
 }
 
-
-
-
 # _zg_doc "ps:: fps: find in ps output"
 function fps() {
     local ps_options="alx"
@@ -77,6 +74,10 @@ function fps() {
     fi
 }
 
+# _zg_doc "help:: zg_help: print this short command help"
+function zg_help() {
+    _zg_docs
+}
 
 # _zg_doc "help:: help: print this short command help"
 function help() {
@@ -110,3 +111,7 @@ function url_encode() {
     fi
 }
 
+# _zg_doc "path:: p: url print the current path"
+function p() {
+    echo "$PATH"
+}

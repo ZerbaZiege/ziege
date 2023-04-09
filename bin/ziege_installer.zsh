@@ -1,10 +1,10 @@
-#!/usr/bin/env bash
+#!/usr/bin/env zsh
 
 # With thanks to the pyenv installer project
 
-set -e
+#set -e
 
-export ZIEGE_DEBUG="ON"
+# export ZIEGE_DEBUG="ON"
 
 [ -n "$ZIEGE_DEBUG" ] && set -x
 
@@ -71,28 +71,29 @@ else
   GITHUB="https://github.com/"
 fi
 
-pushd $ZIEGE_INSTALL_DIRECTORY &> /dev/null
-
 # Get the code
-checkout "${GITHUB}ZerbaZiege/ziege.git" "main"
+checkout "${GITHUB}ZerbaZiege/ziege.git" "$ZIEGE_INSTALL_DIRECTORY" "main" &>/dev/null
 
 # Update ~/.zshrc
-grep -q  '.ziege/init.zsh' $HOME/.zshrc
-if [ "$?" != "0" ]; then
-cat <<ZSHRC_ADDITION
-if [[ -d $ZIEGE_INSTALL_DIRECTORY ]] && [[ -e $ZIEGE_INSTALL_DIRECTORY/init.zsh ]]; then
-    source $ZIEGE_INSTALL_DIRECTORY/.ziege/init.zsh
+if [[ ! -e $HOME/.zshrc ]]; then
+  touch $HOME/.zshrc
 fi
-ZSHRC_ADDITION >> $HOME/.zshrc
+
+grep -q  '.ziege/init.zsh' $HOME/.zshrc
+if [[ $? -ne 0 ]]; then
+cat <<EOF >> $HOME/.zshrc
+if [[ -d $ZIEGE_INSTALL_DIRECTORY ]] && [[ -e $ZIEGE_INSTALL_DIRECTORY/init.zsh ]]; then
+    source $ZIEGE_INSTALL_DIRECTORY/init.zsh
+fi
+EOF
 fi
 
 popd &> /dev/null
 
-which _zg_env
+which _zg_env &>/dev/null
 if [ "$?" != "0" ]; then
   { echo
-    colorize 1 "WARNING"
-    echo "You need to restart your shell"
+    echo "WARNING You need to restart your shell"
     echo
   } >&2
 fi
