@@ -5,9 +5,9 @@
 # _zg_doc "vscode:: v: Run VSCode on the current directory"
 function v() {
     if [[ -z "$1" ]]; then
-        command code .
+        command code -n .
     else
-        command code  ${@:1}
+        command code -n ${@:1}
     fi    
 }
 
