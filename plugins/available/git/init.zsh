@@ -100,7 +100,7 @@ function _g_ssh() {
 # _zg_doc "git:: gpull: update local copy from remote"
 function gpull() {
     if [ -z $1 ]; then
-        _g_ssh pull origin main
+        _g_ssh pull origin $(gprimary)
     else
         _g_ssh pull ${@:1}
     fi

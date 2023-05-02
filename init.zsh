@@ -205,5 +205,37 @@ function _zg_run() {
     _ZG_REPLY=($which_status $cmd_status)
 }
 
+# _zg_doc "ziege:: _zg_os: Detect OS type"
+function _zg_os() {
+    if [[ "$OSTYPE" == "linux-gnu" ]]; then
+        echo "linux"
+    elif [[ "$OSTYPE" == "darwin"* ]]; then
+        echo "macos"
+    elif [[ "$OSTYPE" == "cygwin" ]]; then
+        echo "cygwin"
+    elif [[ "$OSTYPE" == "freebsd"* ]]; then
+        echo "freebsd"
+    else
+        echo ""
+    fi
+}
+
+# _zg_doc "ziege:: _zg_open: Open a file"
+function _zg_open() {
+    local os_type=$(_zg_os)
+    local os_open_cmd=""
+    
+    if [[ -n $os_type ]]; then
+        if [[ $os_type == "macos" ]]; then
+            os_open_cmd=$(which open)
+        else
+            os_open_cmd=$(which xdg-open)
+        fi
+    fi
+    if [[ -n $os_open_cmd ]]; then
+        $os_open_cmd ${@:1}
+    fi
+}
+
 # Start everything off
 _zg_bootstrap
