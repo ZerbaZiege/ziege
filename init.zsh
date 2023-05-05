@@ -26,7 +26,7 @@ function _zg_debug {
     fi
 }
 
-# _zg_doc "ziege:: _zg_echo: Diplay internal message or command. Controlled by ZIEGE_ECHO."
+# _zg_doc "ziege:: _zg_echo: Display internal message or command. Controlled by ZIEGE_ECHO."
 function _zg_echo {
     if [[ -n $ZIEGE_ECHO && $ZIEGE_ECHO == 'ON' ]]; then
         echo "${@:1}"

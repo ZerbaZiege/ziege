@@ -1,7 +1,7 @@
 # Ziege AWS plugin
 
-# _zg_doc "aws:: awse: Show all AWS environment variables"
-function awse() {
+# _zg_doc "aws:: aws_env: Show all AWS environment variables"
+function aws_env() {
     env | grep AWS
 }
 
