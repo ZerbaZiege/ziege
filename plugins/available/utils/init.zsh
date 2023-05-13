@@ -137,3 +137,10 @@ function emplast() {
   cd $latest_dir
   v
 }
+
+# _zg_doc "utils:: emprm: Delete the current emp directory"
+function emprm() {
+  local current_dir_base=$(basename $(pwd)) 
+  cd $(emp_base_dir)
+  rm -rf $current_dir_base
+}
