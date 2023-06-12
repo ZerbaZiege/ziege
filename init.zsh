@@ -306,5 +306,8 @@ function _zg_open() {
     fi
 }
 
+# _zg_doc "utils:: zopen: alias for _zg_open"
+alias zopen=_zg_open
+
 # Start everything off
 _zg_bootstrap

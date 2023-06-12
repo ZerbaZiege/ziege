@@ -227,3 +227,30 @@ function gpr() {
     # set +x     
 }
 
+# _zg_doc "git:: greset: Delete last n local commits retaining changes. Defaults to n=1"
+function greset() {
+  if [[ -z $1 ]]; then
+    g reset --soft HEAD^
+  else
+    g reset --soft HEAD~$1
+  fi
+}
+
+# _zg_doc "git:: grestore: Restore a modified file. Optional argument --staged"
+function grestore() {
+  if [[ -z $1 ]]; then
+    return 1
+  elif [[ -z $2 ]]; then
+    local filename=$1
+    g restore $filename
+  else
+    local filename=$1
+    local staged=$2
+    g restore $filename $staged
+  fi
+}
+
+# _zg_doc "git:: gdiff: git with difftool"
+function gdiff() {
+  g difftool ${@:1}
+}
