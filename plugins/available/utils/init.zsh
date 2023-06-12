@@ -137,3 +137,56 @@ function emplast() {
   cd $latest_dir
   v
 }
+
+# _zg_doc "utils:: emprm: Delete the current emp directory"
+function emprm() {
+  local current_dir_base=$(basename $(pwd)) 
+  cd $(emp_base_dir)
+  rm -rf $current_dir_base
+}
+
+##
+# Support for Storage Units calculator
+##
+# _zg_doc "utils:: _bcalc: Evaluate storage unit expression"
+function _bcalc() {
+	result=$(( $1 ))
+	echo $result
+}
+
+export BYTES_DECIMAL_UNIT=1000
+export KB=$(_bcalc "$BYTES_DECIMAL_UNIT")
+export MB=$(_bcalc "$KB * $BYTES_DECIMAL_UNIT")
+export GB=$(_bcalc "$MB * $BYTES_DECIMAL_UNIT")
+export TB=$(_bcalc "$GB * $BYTES_DECIMAL_UNIT")
+export BYTES_BINARY_UNIT=1024
+export KiB=$(_bcalc "$BYTES_BINARY_UNIT")
+export MiB=$(_bcalc "$KiB * $BYTES_BINARY_UNIT")
+export GiB=$(_bcalc "$MiB * $BYTES_BINARY_UNIT")
+export TiB=$(_bcalc "$GiB * $BYTES_BINARY_UNIT")
+
+# _zg_doc "utils:: su_calc: Storage units calculator e.g. su_calc 25 TiB"
+function su_calc() {
+	local _l_unit=$2
+	local result=$(( $_l_unit * "$1" ))
+	printf "%s  %'d\n" $result $result
+}
+
+##
+# Support for Storage Units calculator ends
+##
+
+# _zg_doc "utils:: gr: grep -E"
+function gr() {
+  command grep -E ${@:1}
+}
+
+# _zg_doc "utils:: gri: grep -Ei"
+function gri() {
+  gr -i ${@:1}
+}
+
+# _zg_doc "utils:: grir: grep -EiHrn"
+function grr() {
+  gri -Hrn ${@:1}
+}

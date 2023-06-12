@@ -120,6 +120,7 @@ function _zg_default_loader {
             # Disable the plugin by removing the link to enabled directory
             _zg_debug "Disabling $available_plugin_init_dir"
             rm -rf $enabled_plugin_init_dir
+            continue
         else
             # Enable the plugin by ensuring the link to the enable directory exists
             if [[ ! -d $enabled_plugin_init_dir ]]; then
@@ -142,15 +143,85 @@ function _zg_default_loader {
     
 }
 
+# _zg_doc "ziege:: _zg_full_path: Produced a fully qualified file or directory path"
+function _zg_full_path() {
+    local full_path
+    if [[ -n $1 ]]; then
+        local arg1=${1//[~]/$HOME} 
+        if [[ -d "$arg1" ]]; then
+            full_path=$(cd "$arg1"; pwd)
+        fi
+        if [[ -f "$arg1" ]]; then
+            local ldir=$(dirname "$arg1")
+            local full_ldir=$(cd "$ldir"; pwd)
+            local base_ldir=$(basename "$arg1")
+            full_path="${full_ldir}/${base_ldir}"
+        fi
+    fi
+    echo $full_path
+}
+
+# _zg_doc "ziege:: _zg_docs_extract_one: Extract the documentation for a single entity"
+function _zg_docs_extract_one() {
+    local location=$1
+    local output_file=$2
+
+    local full_location=$(_zg_full_path $1)
+
+    if [[ -n $full_location ]]; then
+        if [[ -d $full_location ]]; then
+            pushdq $full_location 
+            egrep -R '^[#] _zg_doc' . | \
+                cut -d'#' -f2 | \
+                sed 's/_zg_doc "//' | \
+                sed 's/"//'  >> $output_file
+            popdq
+        fi
+        if [[ -f $full_location ]]; then
+            egrep '^[#] _zg_doc' $full_location | \
+                cut -d'#' -f2 | \
+                sed 's/_zg_doc "//' | \
+                sed 's/"//'  >> $output_file
+        fi
+    fi
+}
+
+# _zg_doc "ziege:: _zg_docs_extract_many: Extract the documentation for multiple entities"
+function _zg_docs_extract_many() {
+    local docs_cache_file_tmp="$ZIEGE_DOCS_CACHE/cache_info_tmp"
+    # Always include the ZIEGE home directory
+    local all_locations=($ZIEGE_HOME)
+        local additional_locations_str=${_ZG_DOCS_ADDITIONAL_LOCATIONS:-}
+    if [[ -n $additional_locations_str ]]; then
+        local additional_locations=(${(s: :)additional_locations_str})
+        for additional_location in $additional_locations
+        do
+            local full_path=$(_zg_full_path $additional_location)
+            if [[ -n $full_path ]]; then
+                all_locations+=($full_path)
+            fi
+        done
+    fi
+    if [[ -f $docs_cache_file_tmp ]]; then
+        rm -rf $docs_cache_file_tmp
+    fi 
+
+    for one_location in $all_locations
+    do
+        _zg_docs_extract_one $one_location $docs_cache_file_tmp
+    done
+
+}
+
+
 # _zg_doc "ziege:: _zg_docs: Generate, cache and display the documentation"
 function _zg_docs() {
     local cache_period_seconds=${ZIEGE_DOCS_CACHE_TTL_SECONDS:-86400}
     local docs_cache_date_file="$ZIEGE_DOCS_CACHE/cache_date"
     local docs_cache_file="$ZIEGE_DOCS_CACHE/cache_info"
+    local docs_cache_file_tmp="$ZIEGE_DOCS_CACHE/cache_info_tmp"
     local docs_cache_file_formatted="$ZIEGE_DOCS_CACHE/cache_info_formatted"
     local current_date_epoch_seconds=$(date "+%s")
-
-    pushd $ZIEGE_HOME >/dev/null
 
     if [[ ! -e $docs_cache_date_file ]]; then
         date "+%s" > $docs_cache_date_file
@@ -162,15 +233,15 @@ function _zg_docs() {
         seconds_diff=$(( $current_date_epoch_seconds - $last_cache_date_epoch_seconds ))
         
         if [[ ! -e $docs_cache ]] || [[ $seconds_diff -gt $cache_period_seconds ]]; then
-            egrep -R '^[#] _zg_doc' . | \
-                cut -d'#' -f2 | \
-                sed 's/_zg_doc "//' | \
-                sed 's/"//' | \
-                sort | uniq > $docs_cache_file
+            _zg_docs_extract_many
+            if [[ ! -f $docs_cache_file_tmp ]]; then
+                break
+            fi
+            sort $docs_cache_file_tmp | uniq > $docs_cache_file
 
             # Generate pretty command output
             $ZIEGE_HOME/bin/zg_format_docs.zsh
-        fi
+        fi 
         if [[ -e $docs_cache_file_formatted ]]; then
             cat $docs_cache_file_formatted
         else
@@ -181,8 +252,6 @@ function _zg_docs() {
         break
     done
 
-    popd >/dev/null   
- 
 }
 
 # _zg_doc "ziege:: _zg_docs_clear_cache: Clear the documentation cache."
@@ -236,6 +305,9 @@ function _zg_open() {
         $os_open_cmd ${@:1}
     fi
 }
+
+# _zg_doc "utils:: zopen: alias for _zg_open"
+alias zopen=_zg_open
 
 # Start everything off
 _zg_bootstrap

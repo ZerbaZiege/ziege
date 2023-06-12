@@ -4,9 +4,11 @@
 
 # _zg_doc "git:: g: Issue any git command"
 function g {
-    # Remember to skip the first argument
-    # _zg_echo "command git ${@:1}"
+    _zg_run _git_ssh_set
+    
     command git ${@:1}
+
+    _zg_run _git_ssh_clear    
 }
 
 # _zg_doc "git:: gst: git status"
@@ -87,40 +89,40 @@ function gs() {
     g show "$1"
 }
 
-# _zg_doc "git:: _g_ssh: (internal) wrapper for any Git command that requires SSH
-function _g_ssh() {
-    _zg_run _git_ssh_set
+# # _zg_doc "git:: _g_ssh: (internal) wrapper for any Git command that requires SSH
+# function _g_ssh() {
+#     _zg_run _git_ssh_set
     
-    # Remember to skip the first argument
-    g ${@:1}
+#     # Remember to skip the first argument
+#     g ${@:1}
 
-    _zg_run _git_ssh_clear    
-}
+#     _zg_run _git_ssh_clear    
+# }
 
 # _zg_doc "git:: gpull: update local copy from remote"
 function gpull() {
     if [ -z $1 ]; then
-        _g_ssh pull origin $(gprimary)
+        g pull origin $(gprimary)
     else
-        _g_ssh pull ${@:1}
+        g pull ${@:1}
     fi
 }
 
 # _zg_doc "git:: gpush: push local copy to remote"
 function gpush() {
     if [ -z $1 ]; then
-        _g_ssh push origin main --tags
+        g push origin main --tags
     else
-        _g_ssh push ${@:1} --tags
+        g push ${@:1} --tags
     fi
 }
 
 # _zg_doc "git:: gpushf: force push local copy to remote"
 function gpushf() {
     if [ -z $1 ]; then
-        _g_ssh push -f origin main --tags
+        g push -f origin main --tags
     else
-        _g_ssh push -f  ${@:1} --tags
+        g push -f  ${@:1} --tags
     fi 
 }
 
@@ -225,3 +227,30 @@ function gpr() {
     # set +x     
 }
 
+# _zg_doc "git:: greset: Delete last n local commits retaining changes. Defaults to n=1"
+function greset() {
+  if [[ -z $1 ]]; then
+    g reset --soft HEAD^
+  else
+    g reset --soft HEAD~$1
+  fi
+}
+
+# _zg_doc "git:: grestore: Restore a modified file. Optional argument --staged"
+function grestore() {
+  if [[ -z $1 ]]; then
+    return 1
+  elif [[ -z $2 ]]; then
+    local filename=$1
+    g restore $filename
+  else
+    local filename=$1
+    local staged=$2
+    g restore $filename $staged
+  fi
+}
+
+# _zg_doc "git:: gdiff: git with difftool"
+function gdiff() {
+  g difftool ${@:1}
+}

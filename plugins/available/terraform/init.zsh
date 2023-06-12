@@ -29,7 +29,7 @@ function tfp() {
     local tf_std_out=$(printf "%s/tfp_%s.txt" $output_dir $dt_stamp)
     export TF_STD_OUT=$tf_std_out
 
-    tf plan  -no-color -out $TF_OUT ${@:1}  | tee $TF_STD_OUT
+    tf plan -parallelism=30 -no-color -out $TF_OUT ${@:1}  | tee $TF_STD_OUT
     echo "Output saved in $TF_STD_OUT"
 
     local output_file_name=$(ls -1t $output_dir | head -n 1)
@@ -40,9 +40,9 @@ function tfp() {
 # _zg_doc "terraform:: tfa: 'terraform apply' results of previous 'tfp' "
 function tfa() {
     if [[ -f $TF_OUT ]]; then
-        tf apply ${@:1} -no-color "$TF_OUT"
+        tf apply -parallelism=30 ${@:1} -no-color "$TF_OUT"
     else
-        tf apply ${@:1} -no-color
+        tf apply -parallelism=30 ${@:1} -no-color
     fi
 }
 
